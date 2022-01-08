@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Star Admin2 </title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../vendors/feather/feather.css">
+  <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="../../vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="../../js/select.dataTables.min.css">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../images/favicon.png" />
+</head>
+<body>
+  <div class="container-scroller"> 
+    <%- include('../../admin/partials_sub/_navbar.html') %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+    <%- include('../../admin/partials_sub/_settings-panel.html') %>
+      <div id="right-sidebar" class="settings-panel">
+        <i class="settings-close ti-close"></i>
+        <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="todo-tab" data-bs-toggle="tab" href="#todo-section" role="tab" aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="chats-tab" data-bs-toggle="tab" href="#chats-section" role="tab" aria-controls="chats-section">CHATS</a>
+          </li>
+        </ul>
+      </div>
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+      <%- include('../../admin/partials_sub/_sidebar.html') %>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">     
+          <div class="row justify-content-center">
+            <div class="col-md-10 grid-margin stretch-card d-flex flex-column">
+              <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                  <div>
+                    <h1 class="card-title"><%= quiz.name %></h1>
+                    <h5 class="text-muted"><%= quiz.description %></h5>
+                    <h5 class="text-muted mb-4">Last modified in <%= quiz.date %></h5>
+                    By - <%= quiz.author %>
+                  </div>
+                  <div>
+                    <img class="rounded" src="<%= quiz.cover_img_url %>" height="200">
+                  </div>
+                </div>                
+              </div>
+              <div class="card h-100">
+                <div class="card-body">
+                  <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+                    <div class="carousel-inner">
+                      <% quiz.questions.map((question,index) => { %>
+                      
+                      <div class="carousel-item <%= index+1 != 1 ? '' : 'active' %>">
+                        <div class="d-flex justify-content-center align-items-center">
+                        <div class="card border border-primary my-5 col-md-8">
+                            <div class="card-body">
+                              <h3 class="card-title"><%= index+1 %>. <%= question %></h3>
+                              <h6 class="card-text d-flex justify-content-center align-items-start flex-column my-2" style="margin: 0 15px;">
+                                <% if(quiz.q_type==="oponly"){ %>                                  
+                                    <div class="form-check px-2">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                      <label class="form-check-label" for="flexRadioDefault1">
+                                        <%= quiz.options[index][0] %>
+                                      </label>
+                                    </div>
+                                    <div class="form-check px-2">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                      <label class="form-check-label" for="flexRadioDefault2">
+                                        <%= quiz.options[index][1] %>
+                                      </label>
+                                    </div>
+                                    <div class="form-check px-2">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                      <label class="form-check-label" for="flexRadioDefault1">
+                                        <%= quiz.options[index][2] %>
+                                      </label>
+                                    </div>
+                                    <div class="form-check px-2">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                      <label class="form-check-label" for="flexRadioDefault2">
+                                        <%= quiz.options[index][3] %>
+                                      </label>
+                                    </div>
+                                <% } else if(quiz.q_type==="twoop"){ %>                                  
+                                    <div class="form-check px-2">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                      <label class="form-check-label" for="flexRadioDefault1">
+                                        <%= quiz.options[index][0] %>
+                                      </label>
+                                    </div>
+                                    <div class="form-check px-2">
+                                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                      <label class="form-check-label" for="flexRadioDefault2">
+                                        <%= quiz.options[index][1] %>
+                                      </label>
+                                    </div>
+                                <% } else if(quiz.q_type==="opimg"){ %>
+                                  <div class="form-check px-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                      <div class="card" style="width: 18rem;">
+                                        <img src="<%= quiz.options[index][0].opurl %>" class="card-img-top" alt="...">
+                                        <h5 class="card-title m-3"><%= quiz.options[index][0].opvalue %></h5>
+                                      </div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check px-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                      <div class="card" style="width: 18rem;">
+                                        <img src="<%= quiz.options[index][1].opurl %>" class="card-img-top" alt="...">
+                                        <h5 class="card-title m-3"><%= quiz.options[index][1].opvalue %></h5>
+                                      </div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check px-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                      <div class="card" style="width: 18rem;">
+                                        <img src="<%= quiz.options[index][2].opurl %>" class="card-img-top" alt="...">
+                                        <h5 class="card-title m-3"><%= quiz.options[index][2].opvalue %></h5>
+                                      </div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check px-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                      <div class="card" style="width: 18rem;">
+                                        <img src="<%= quiz.options[index][3].opurl %>" class="card-img-top" alt="...">
+                                        <h5 class="card-title m-3"><%= quiz.options[index][3].opvalue %></h5>
+                                      </div>
+                                    </label>
+                                  </div>
+                                <% } else if(quiz.q_type==="twoopimg"){ %>
+                                  <div class="form-check px-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                      <div class="card" style="width: 18rem;">
+                                        <img src="<%= quiz.options[index][0].opurl %>" class="card-img-top" alt="...">
+                                        <h5 class="card-title m-3"><%= quiz.options[index][0].opvalue %></h5>
+                                      </div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check px-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                      <div class="card" style="width: 18rem;">
+                                        <img src="<%= quiz.options[index][1].opurl %>" class="card-img-top" alt="...">
+                                        <h5 class="card-title m-3"><%= quiz.options[index][1].opvalue %></h5>
+                                      </div>
+                                    </label>
+                                  </div>
+                                <% } %>
+                              </h6>
+                            </div>
+                        </div>
+                        </div>
+                      </div>
+
+                      <% }) %>
+                    <button class="btn btn-primary carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="btn btn-primary carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <%- include('../../admin/partials_sub/_footer.html') %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- plugins:js -->
+  <script src="../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="../../vendors/chart.js/Chart.min.js"></script>
+  <script src="../../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="../../vendors/progressbar.js/progressbar.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="../../js/off-canvas.js"></script>
+  <script src="../../js/hoverable-collapse.js"></script>
+  <script src="../../js/template.js"></script>
+  <script src="../../js/settings.js"></script>
+  <script src="../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../js/dashboard.js"></script>
+  <script src="../../js/Chart.roundedBarCharts.js"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+

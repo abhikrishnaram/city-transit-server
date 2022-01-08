@@ -1,0 +1,127 @@
+    <div class="form-group mb-3">
+        <label>Quiz Type</label>
+        <input type="text" class="form-control" value="opimg" id="q_type" name="q_type" disabled>
+    </div>
+    <div class="form-group mb-3">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" placeholder="name" aria-label="name" aria-describedby="basic-addon1" value="<%= quiz.name %>" id="name" name="name" required>
+    </div>
+    <div class="form-group mb-3">
+        <label for="description">Description</label>
+        <textarea type="text" class="form-control h-100" rows="3" id="description" name="description" required>
+          <%= quiz.description %>
+        </textarea>
+    </div>
+    <div class="form-group mb-3">
+        <label for="cover_img_url">Cover Image URL</label>
+        <input type="text" class="form-control" placeholder="Image url" aria-label="cover_img_url" aria-describedby="basic-addon4" value="<%= quiz.cover_img_url %>" id="cover_img_url" name="cover_img_url" required>
+    </div>
+    <% for (var i =1; i <=10;  i++ ) { %>
+    <div class="form-group mb-3 mt-5">
+        <label for="quest<%= i %>">Question <%= i %></label>
+        <input type="text" class="form-control" placeholder="Question <%= i %>" aria-label="quest<%= i %>" aria-describedby="basic-addon5" value="<%= quiz.questions[i-1] %>" id="quest<%= i %>" name="quest">
+    </div>    
+
+    <div class="form-group mb-3">
+        <label for="quest<%= i %>">Options</label>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.1"> <%= i %>.1</span>
+          <input type="text" class="form-control" name="op<%= i %>1">
+          <span class="input-group-text" id="op<%= i %>.1"> <%= i %>.1 Image Url</span>
+          <input type="text" class="form-control" name="op<%= i %>1url">          
+        </div>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.2"> <%= i %>.2</span>
+          <input type="text" class="form-control" name="op<%= i %>2">
+          <span class="input-group-text" id="op<%= i %>.2"> <%= i %>.2 Image Url</span>
+          <input type="text" class="form-control" name="op<%= i %>2url">          
+        </div>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.3"> <%= i %>.3</span>
+          <input type="text" class="form-control" name="op<%= i %>3">
+          <span class="input-group-text" id="op<%= i %>.3"> <%= i %>.3 Image Url</span>
+          <input type="text" class="form-control" name="op<%= i %>3url">          
+        </div>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.4"> <%= i %>.4</span>
+          <input type="text" class="form-control" name="op<%= i %>4">
+          <span class="input-group-text" id="op<%= i %>.4"> <%= i %>.4 Image Url</span>
+          <input type="text" class="form-control" name="op<%= i %>4url">          
+        </div>                
+    </div>
+    <hr>
+    <% } %>
+    <div id="newRow"></div>
+    <button id="addRow" type="button" class="btn btn-primary mb-3 mx-auto">Add Question</button>   
+    <div class="form-group mb-3">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="editable" id="customSwitch1">
+            <label class="custom-control-label" for="customSwitch1">Click if the questions editable</label>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="author">Author</label>
+        <input type="text" class="form-control" placeholder="Author" aria-label="author" aria-describedby="basic-addon5" value="<%= quiz.author %>" id="author" name="author">
+    </div>
+    <div class="d-inline-flex d-none">
+        <a href="/" class="btn btn-secondary mr-4">Cancel</a>
+        <button class="btn btn-primary">Save</button>
+    </div>
+
+
+<script src="../../js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    // add row
+    var count = 11;
+    $("#addRow").click(function () {
+        
+        var html = '';
+        html += '<div class="form-group mb-3 mt-5" id="inputFormRow">'
+        html += '<label>Question '+ count +'</label>'
+        html += '<div class="input-group">'
+        html += '<input type="text" class="form-control" placeholder="Question <%= i %>" aria-label="quest<%= i %>" aria-describedby="basic-addon5" value="<%= quiz.questions['+count+'-1] %>" id="quest<%= i %>" name="quest">'
+        html += '<div class="input-group-append">'
+        html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>'
+        html += '</div>'
+        html += '</div>'
+        html += '<div class="form-group mb-3">'
+        html += '<label>Options</label>'
+        html += '<div class="input-group flex-nowrap">'
+        html += '<span class="input-group-text" id="op<%= i %>.1"> '+count+'.1</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'1">'
+        html += '<span class="input-group-text" id="op<%= i %>.1"> '+count+'.1 Image Url</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'1url">          '
+        html += '</div>'
+        html += '<div class="input-group flex-nowrap">'
+        html += '<span class="input-group-text" id="op<%= i %>.2"> '+count+'.2</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'2">'
+        html += '<span class="input-group-text" id="op<%= i %>.2"> '+count+'.2 Image Url</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'2url">          '
+        html += '</div>'
+        html += '<div class="input-group flex-nowrap">'
+        html += '<span class="input-group-text" id="op<%= i %>.3"> '+count+'.3</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'3">'
+        html += '<span class="input-group-text" id="op<%= i %>.3"> '+count+'.3 Image Url</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'3url">          '
+        html += '</div>'
+        html += '<div class="input-group flex-nowrap">'
+        html += '<span class="input-group-text" id="op<%= i %>.4"> '+count+'.4</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'4">'
+        html += '<span class="input-group-text" id="op<%= i %>.4"> '+count+'.4 Image Url</span>'
+        html += '<input type="text" class="form-control" name="op'+count+'4url">          '
+        html += '</div>                '
+        html += '</div>'
+        html += '<hr>';        
+        html += '</div>'            
+
+        count++;
+        $('#newRow').append(html);
+    });
+
+    // remove row
+    $(document).on('click', '#removeRow', function () {
+        count--;
+        $(this).closest('#inputFormRow').remove();
+    });
+</script>

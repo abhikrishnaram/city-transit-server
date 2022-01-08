@@ -1,0 +1,32 @@
+    <div class="form-group mb-3">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" placeholder="title" aria-label="title" aria-describedby="basic-addon1" value="<%= article.title %>" id="title" name="title">
+    </div>
+    <div class="form-group mb-3">
+        <label for="seo_title">SEO Title</label>
+        <input type="text" class="form-control" placeholder="Seo title" aria-label="seo_title" aria-describedby="basic-addon2" value="<%= article.seo_title %>" id="seo_title" name="seo_title">
+    </div>
+    <div class="form-group mb-3">
+        <label for="description">Description</label>
+        <textarea type="text" class="form-control h-100" rows="3" id="description" name="description" required>
+          <%= article.description %>
+        </textarea>
+    </div>
+    <div class="form-group mb-3">
+        <label for="img_url">Image URL</label>
+        <input type="text" class="form-control" placeholder="Image url" aria-label="img_url" aria-describedby="basic-addon4" value="<%= article.img_url %>" id="img_url" name="img_url">
+    </div>
+    <div class="form-group mb-3">
+        <label for="markdown">Mardown Article body</label>
+        <textarea type="text" class="form-control h-100" rows="5" id="editor" name="markdown" required>
+          <%= article.markdown %>
+        </textarea>
+    </div>
+    <div class="form-group mb-3">
+        <label for="author">Author</label>
+        <input type="text" class="form-control" placeholder="Author" aria-label="author" aria-describedby="basic-addon5" value="<%= article.author %>" id="author" name="author">
+    </div>
+    <div class="d-inline-flex d-none">
+        <a href="/blog" type="submit" class="btn btn-secondary mr-4">Cancel</a>
+        <button class="btn btn-primary">Save</button>
+    </div>

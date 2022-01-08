@@ -1,0 +1,135 @@
+    <div class="form-group mb-3">
+        <label>Quiz Type</label>
+        <input type="text" class="form-control" value="oponly" id="q_type" name="q_type" disabled>
+    </div>
+    <div class="form-group mb-3">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" placeholder="name" aria-label="name" aria-describedby="basic-addon1" value="<%= quiz.name %>" id="name" name="name" required>
+    </div>
+    <div class="form-group mb-3">
+        <label for="description">Description</label>
+        <textarea type="text" class="form-control h-100" rows="3" id="description" name="description" required>
+          <%= quiz.description %>
+        </textarea>
+    </div>
+    <div class="form-group mb-3">
+        <label for="cover_img_url">Cover Image URL</label>
+        <input type="text" class="form-control" placeholder="Image url" aria-label="cover_img_url" aria-describedby="basic-addon4" value="<%= quiz.cover_img_url %>" id="cover_img_url" name="cover_img_url" required>
+    </div>
+    <% for (var i =1; i <=quiz.questions.length;  i++ ) { %>
+    <div class="form-group mb-3 mt-5">
+        <label for="quest<%= i %>">Question <%= i %></label>
+        <input type="text" class="form-control" placeholder="Question <%= i %>" aria-label="quest<%= i %>" aria-describedby="basic-addon5" value="<%= quiz.questions[i-1] %>" id="quest<%= i %>" name="quest">
+    </div>    
+
+    <div class="form-group mb-3 optionsClassId">
+        <label for="quest<%= i %>">Options</label>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.1"> <%= i %>.1</span>
+          <input type="text" class="form-control" value="<%= quiz.options[i-1][0] %>" name="op<%= i %>">
+        </div>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.2"> <%= i %>.2</span>
+          <input type="text" class="form-control" value="<%= quiz.options[i-1][1] %>" name="op<%= i %>">
+        </div>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.3"> <%= i %>.3</span>
+          <input type="text" class="form-control" value="<%= quiz.options[i-1][2] %>" name="op<%= i %>">
+        </div>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="op<%= i %>.4"> <%= i %>.4</span>
+          <input type="text" class="form-control" value="<%= quiz.options[i-1][3] %>" name="op<%= i %>">
+        </div>
+        <button type="button" class="btn btn-primary d-none my-2 mx-auto addOption">Add Option</button>
+    </div>
+    <hr>
+    <% } %>    
+    <div id="questionClassId"></div>
+    <button id="addQuestion" type="button" class="btn btn-primary mb-3 mx-auto">Add Question</button>
+    <div class="form-group mb-3">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="editable" id="customSwitch1">
+            <label class="custom-control-label" for="customSwitch1">Click if the questions editable</label>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="author">Author</label>
+        <input type="text" class="form-control" placeholder="Author" aria-label="author" aria-describedby="basic-addon5" value="<%= quiz.author %>" id="author" name="author">
+    </div>
+    <div class="d-inline-flex d-none">
+        <a href="/" class="btn btn-secondary mr-4">Cancel</a>
+        <button class="btn btn-primary">Save</button>
+    </div>
+
+      <script src="../../js/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    // add row
+    var count = <%= quiz.questions.length+1 %>;    
+    $(".addOption").click(function () {
+        console.log("add option")
+        var html = '';
+        html += '<div class="input-group flex-nowrap optionId">'
+        html += '<span class="input-group-text" id="op<%= i %>.2"> <%= i %>.2</span>'
+        html += '<div class="input-group">'
+        html += '<input type="text" class="form-control" placeholder="Question '+count+'\" aria-label="quest<%= i %>" aria-describedby="basic-addon5" value="<%= quiz.questions['+count+'-1] %>" id="quest<%= '+count+' %>" name="quest">'
+        html += '<div class="input-group-append">'
+        html += '<button type="button" class="btn btn-danger removeOption">Remove</button>'
+        html += '</div>'
+        html += '</div>'
+        html += '</div>'
+        count++;
+        $(this).closest('.optionsClassId').append(html);
+    });
+
+    // remove row
+    $(document).on('click', '.removeOption', function () {
+        count--;
+        $(this).closest('.optionId').remove();
+    });
+
+    $("#addQuestion").click(function () {        
+        var html = '';
+            html += '<div class="form-group mb-3 mt-5" id="inputFormRow">'
+            html += '<label for="quest<%= i %>">Question '+count+'</label>'
+            html += '<div class="input-group flex-nowrap">'
+            html += '<input type="text" class="form-control" placeholder="Question '+count+'" value="<%= quiz.questions['+count+'-1] %>" id="quest'+count+'" name="quest">'
+            html += '<div class="input-group-append">'
+            html += '<button type="button" class="btn btn-danger" id="removeRow">Remove</button>'
+            html += '</div>'
+            html += '</div>'
+            html += '<div class="form-group mb-3 optionsClassId">'
+            html += '<label for="quest<%= i %>">Options</label>'
+            html += '<div class="input-group flex-nowrap">'
+            html += '<span class="input-group-text" id="op'+count+'.1"> '+count+'.1</span>'
+            html += '<input type="text" class="form-control" name="op'+count+'">'
+            html += '</div>'
+            html += '<div class="input-group flex-nowrap">'
+            html += '<span class="input-group-text" id="op'+count+'.2"> '+count+'.2</span>'
+            html += '<input type="text" class="form-control" name="op'+count+'">'
+            html += '</div>'
+            html += '<div class="input-group flex-nowrap">'
+            html += '<span class="input-group-text" id="op'+count+'.3"> '+count+'.3</span>'
+            html += '<input type="text" class="form-control" name="op'+count+'">'
+            html += '</div>'
+            html += '<div class="input-group flex-nowrap">'
+            html += '<span class="input-group-text" id="op'+count+'.4"> '+count+'.4</span>'
+            html += '<input type="text" class="form-control" name="op'+count+'">'
+            html += '</div>'            
+            html += '<button type="button" class="btn btn-primary d-none my-2 mx-auto addOption">Add Option</button>'
+            html += '</div>'
+            html +='<hr>'          
+            html += '</div>'    
+        
+        count++;
+        
+        $('#questionClassId').append(html);
+    });
+
+    // remove row
+    $(document).on('click', '#removeRow', function () {
+        count--;
+        $(this).closest('#inputFormRow').remove();
+    });
+</script>

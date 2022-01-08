@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Blog | View</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<style>
+/* Style the body */
+body {
+  font-family: Arial;
+  margin: 0;
+}
+
+/* Header/Logo Title */
+.header {
+  padding: 60px;
+  text-align: center;
+  background: #1abc9c;
+  background-image: url("<%= article.img_url %>");
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: white;
+  font-size: 30px;
+}
+
+/* Page Content */
+.content {padding:20px;}
+</style>
+</head>
+<body>
+<div class="header">
+<a href="/blog" class="p align-items-start d-flex text-dark" style="font-size: 25px;">&#8592; back</a>
+  <h1><b><%= article.title %></b></h1>
+  <div class="h5"><%= article.description %></div>
+</div>
+
+<div class="content col-md-10 col-lg-8 mt-5 mx-auto">
+  <%- article.markdown %>
+</div>
+
+<a href="/blog/edit/<%= article.id %>" class="btn btn-info"> EDIT </a>
+</body>
+</html>
