@@ -1,5 +1,5 @@
 const express = require('express')
-const QuizSchema = require('./../models/quiz.js')
+const QuizSchema = require('../models/carbon.js')
 const router = express.Router()
 const { v4: uuidv4 } = require('uuid')
 

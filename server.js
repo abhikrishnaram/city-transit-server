@@ -4,7 +4,7 @@ const articleRouter = require('./routes/articles')
 const quizRouter = require('./routes/quiz')
 const apiRouter = require('./routes/api')
 const mongoose = require('mongoose');
-const Article =  require('./models/article.js');
+const Article =  require('./models/assistance.js');
 const methodOverride = require('method-override');
 const dotenv = require('dotenv').config();
 var cors = require('cors')
@@ -33,8 +33,8 @@ app.use(session({
 app.use(express.static(__dirname + '/admin'));
 app.set('view engine','ejs')
 app.use(methodOverride('_method'))
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 app.get('/login', (req,res)=>{
        res.render('login')
@@ -97,8 +97,8 @@ app.all('/blog/*', function (req, res, next) {
 });
 
 
-app.use('/blog',articleRouter)
-app.use('/quiz',quizRouter)
+// app.use('/blog',articleRouter)
+// app.use('/quiz',quizRouter)
 app.use(cors())
 app.use('/apiv1',apiRouter)
 

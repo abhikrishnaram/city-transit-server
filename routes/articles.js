@@ -1,5 +1,5 @@
 const express = require('express')
-const Article = require('./../models/article.js')
+const Article = require('../models/assistance.js')
 const router = express.Router()
 const { v4: uuidv4 } = require('uuid')
 

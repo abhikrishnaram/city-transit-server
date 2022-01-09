@@ -1,177 +1,160 @@
 const express = require('express')
-const Article = require('./../models/article.js')
-const QuizSchema = require('./../models/quiz.js')
-const CreatorQuizSchema = require('./../models/creatorquiz.js')
-const ResultSchema = require('./../models/result.js')
+const Assistance = require('../models/assistance.js')
+const CarbonFP = require('../models/carbon.js')
+const Blockage = require('../models/blockage.js')
+const Booking = require('../models/Booking.js')
+const Carpool = require('../models/carpool.js')
 const router = express.Router()
-const { v4: uuidv4 } = require('uuid')
 
-router.get('/blog', async (req, res) => {
-    const articles = await Article.find({},{ markdown: 0 }).sort({date: 'desc'});    
-    res.status(200).json(articles)
+const gpkm = 251
+const speed = 25
+
+router.get('/reqestassistance', async (req, res) => {
+    const assistance = await Assistance.find().sort({date: 'desc'});    
+    res.status(200).json(assistance)
 });
 
-router.get('/blog/cover', async (req, res) => {
-    const articles = await Article.find({},{ markdown: 0 }).sort({date: 'desc'}).limit(3);    
-    res.status(200).json(articles)
+router.post('/reqestassistance', async (req, res) => {     
+    const assistance = new Assistance({
+		title: req.body.title,
+        location: req.body.location,
+        description: req.body.description,
+        vehicle_no: req.body.vehicle_no,
+        contact_no: req.body.contact_no,
+        date: req.body.date,
+        uid: req.body.uid,
+	})    
+	await assistance.save()
+	res.send(assistance)    
 });
 
-router.get('/blog/:id', async (req, res) => {
+
+
+
+router.get('/reportblockage', async (req, res) => {
+    const blockage = await Blockage.find().sort({date: 'desc'});    
+    res.status(200).json(blockage)
+});
+
+router.post('/reportblockage', async (req, res) => {
+    console.log(req.body)    
+    const blockage = new Blockage({
+		uid: req.body.uid,
+        location: req.body.location,
+        description: req.body.description,        
+	})    
+	await blockage.save()
+	res.send(blockage)    
+});
+
+
+
+
+router.get('/mycarbonFP/:uid', async (req, res) => {
+    const carbon = await CarbonFP.findOne({ uid: req.param.uid });  
+    console.log(carbon);
+    res.status(200).json(carbon)
+});
+
+router.post('/mycarbonFP', async (req, res) => {
+    console.log(req.body)    
+    const carbon = new CarbonFP({
+		uid: req.body.uid,
+        cfp: req.body.cfp,
+	})
+    console.log(carbon)
+	// await blockage.save()
+	// res.send(blockage)    
+});
+
+
+
+
+router.get('/booking/:uid', async (req, res) => {
     try {
-        const article = await Article.findById(req.params.id);
-        res.status(200).json(article)
+        const booking = await Booking.find({uid: req.param.uid});
+        res.status(200).json(booking)
     } catch (e) {
         res.json('error = '+e);
     }
 });
 
-
-
-router.get('/quiz', async (req, res) => {
-    const quizzez = await QuizSchema.find({},{ questions: 0, answers: 0, options: 0 }).sort({date: 'desc'});    
-    res.status(200).json(quizzez)
+router.get('/booking/me/:id', async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        res.status(200).json(booking)
+    } catch (e) {
+        res.json('error = '+e);
+    }
 });
 
-router.get('/quiz/cover', async (req, res) => {
-    const quizzez = await QuizSchema.find({},{ questions: 0, answers: 0, options: 0 }).sort({date: 'desc'}).limit(3);    
-    res.status(200).json(quizzez)
-});
+router.post('/bookjourney', async (req, res) => {
+    const totemission = (parseFloat(req.body.duration)/60.0)*speed*gpkm
+    const booking = new Booking({
+        uid: req.body.uid,
+        from: req.body.from,
+        to: req.body.to,
+        cost: req.body.cost,
+        from_id: req.body.from_id,
+        to_id: req.body.to_id,
+	})
+    console.log(typeof(totemission))
 
-router.get('/quiz/random', async (req, res) => {
-
-    QuizSchema.countDocuments().exec(function(err, count){
-
-    var random = Math.floor(Math.random() * count);
-
-    QuizSchema.findOne({},{ questions: 0, answers: 0, options: 0 }).skip(random).exec(
-        function (err, result) {
-            res.status(200).json(result) 
-        });
-
+	await booking.save()
+	CarbonFP.findOneAndUpdate({ uid: req.body.uid }, { $inc: { cfp: totemission } }, {new: true },function(err, response) {
+        if (err) {
+            console.log(err);
+       } else {
+            console.log("emission added");
+       }
     });
-   // const quizzez = await QuizSchema.find({},{ questions: 0, answers: 0, options: 0 }).sort({date: 'desc'}).limit(3);    
-    //res.status(200).json(quizzez)
+    res.send(booking)
 });
 
-router.get('/quiz/:id', async (req, res) => {
+
+router.get('/carpool/list', async (req, res) => {
     try {
-        const quiz = await QuizSchema.findById(req.params.id);
-        res.status(200).json(quiz)
+        const carpool = await Carpool.find({need: true});
+        res.status(200).json(carpool)
     } catch (e) {
-        res.json("Error "+e);
-    }    
-});
-
-router.get('/quiz/min/:id', async (req, res) => {
-    try {
-        const quiz = await QuizSchema.findById(req.params.id,{questions: 0, options: 0, author: 0});
-        res.status(200).json(quiz)
-    } catch (e) {
-        res.json("Error "+e);
-    }    
-});
-
-router.get('/quiz/p/:id', async (req, res) => {
-    try {
-        const quiz = await CreatorQuizSchema.find({"url": req.params.id},{ key: 0, answers: 0});
-        res.status(200).json(quiz[0])
-    } catch (e) {
-        res.json("Error "+e);
-    }    
-});
-
-router.post('/creatorquiz', async (req, res, next) => {
-    req.quiz = new CreatorQuizSchema();
-    console.log(req.body)
-    next()
-}, creator_quiz_upload('new'));
-
-function creator_quiz_upload(path) {
-    return async (req, res) => {
-        quiz = req.quiz;
-        quiz.key = req.body.key,
-        quiz.url = req.body.url,
-        quiz.questions = req.body.questions,
-        quiz.answers = req.body.answers,
-        quiz.options = req.body.options,
-        quiz.username = req.body.username,
-        quiz.location = req.body.location,
-        quiz.date = new Date().toLocaleDateString(),
-        quiz.org_id = req.body.org_id
-        
-
-        try {
-            quiz = await quiz.save();
-            res.status(200).json({"status":"success"});
-        } catch (e) {
-            console.log(e);
-            res.status(404).json({ "error": e })
-        }
+        res.json('error = '+e);
     }
-}
-
-router.get('/quiz/creatorquiz/score/:id', async (req, res) => {
-    try {
-        const quizRes = await ResultSchema.find({"url":req.params.id},{}).sort({date: 'desc'});
-        res.status(200).json(quizRes)
-    } catch (e) {
-        res.json("Error "+e);
-    }    
 });
 
-router.get('/quiz/p/score/:id', async (req, res) => {
-    try {
-        const quiz = await ResultSchema.find({"_id": req.params.id});
-        res.status(200).json(quiz[0])
-    } catch (e) {
-        res.json("Error "+e);
-    }    
+router.post('/carpool/have', async (req, res) => {
+    console.log(req.body)    
+    const carpool = new Carpool({
+        uid: req.body.uid,
+        need: false,
+        from: req.body.from,
+        to: req.body.to,
+        date: req.body.date,
+        time: req.body.time,
+        accepted: false,
+        accepted_by_id: "",
+	})
+    console.log(carpool)
+	// await booking.save()
+	// res.send(booking)    
 });
 
-router.post('/needcarpooling', async (req, res, next) => {
-    req.result = new ResultSchema();
-    //console.log(req.body)
-    if (req.body.q_type!=="usrop") {
-        const realans = await CreatorQuizSchema.find({"url": req.body.url},{ key: 0, options: 0, questions: 0 })
-        console.log(realans[0] + " isahdk;");
-        var score = 0;
-        for(var i = 0; i< realans[0].answers.length;i++){
-            console.log(realans[0].answers[i]+"       "+req.body.answers[i])
-            if(realans[0].answers[i] == req.body.answers[i])
-                score++;
-        }
-        req.score = score;        
-        console.log(score)
-    }
-    next()
-}, upload_score());
+router.post('/carpool/need', async (req, res) => {
+    console.log(req.body)    
+    const carpool = new Carpool({
+        uid: req.body.uid,
+        need: true,
+        from: req.body.from,
+        to: req.body.to,
+        date: req.body.date,
+        time: req.body.time,
+        accepted: req.body.accepted,
+        accepted_by_id: req.body.accepted_by_id,
+	})
+    console.log(carpool)
+	// await booking.save()
+	// res.send(booking)    
+});
 
-function upload_score() {
-    return async (req, res) => {
-        result = req.result;
-        result.url = req.body.url,
-        result.questions = req.body.questions,
-        result.answers = req.body.answers,
-        result.playername = req.body.username,
-        result.location = req.body.location,
-        result.q_type = req.body.q_type,
-        result.org_id = req.body.org_id,
-        result.date = new Date().toLocaleDateString()
-        
-        if (req.body.q_type!=="usrop") 
-            result.score = req.score
-        else
-            result.score = 0
-        
 
-        try {
-            result = await result.save();
-            res.status(200).json({"status":"success","result":result});
-        } catch (e) {
-            console.log(e);
-            res.status(404).json({ "error": e })
-        }
-    }
-}
 
 module.exports = router

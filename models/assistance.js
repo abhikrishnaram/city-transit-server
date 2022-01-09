@@ -4,44 +4,39 @@ const createDOMPurify = require('dompurify');
 const {JSDOM} = require('jsdom');
 const dompurify = createDOMPurify(new JSDOM().window);
 
-const articleSchema = new mongoose.Schema({
+const assistanceSchema = new mongoose.Schema({
 	title: {
 		type: String,
 		required: true
 	},
-	seo_title: {
+	location:{
 		type: String,
-		required: false		
-	},
+		required: true
+	},	
 	description: {
 		type: String,
 		required: false
 	},
-	img_url: {
-		type: String,
-		required: false
-	},
-	markdown: {
+	vehicle_no: {
 		type: String,
 		required: true
 	},
-	author: {
+	contact_no: {
 		type: String,
-		required: false
+		required: true
 	},
 	date: {
 		type: String,
 		default: Date.now
-	},
-	a_id: {
+	},	
+	uid: {
 		type: String,
-		required: true,
-		unique: true
-	}
+		required: true
+	},
 })
 
 
-articleSchema.pre('validate', function(next) {
+assistanceSchema.pre('validate', function(next) {
 
   if (this.markdown) {
     const sanitizedHtml = dompurify.sanitize(marked(this.markdown));
@@ -52,4 +47,4 @@ articleSchema.pre('validate', function(next) {
 })
 
 
-module.exports = mongoose.model('Article',articleSchema);
+module.exports = mongoose.model('Assistance',assistanceSchema);
